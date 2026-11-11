@@ -1,5 +1,31 @@
 # Supabase
 
-Esta pasta reserva migrations e políticas para a etapa de integração real. Nenhuma credencial ou migration executável foi inventada na fundação.
+A integração do projeto DSS usa Supabase Auth, PostgreSQL, Storage e RLS por `company_id`. As variáveis públicas do projeto foram configuradas no ambiente gerenciado; nenhum `service_role` é usado no frontend.
 
-A decisão aprovada é Supabase direto no frontend com RLS por `company_id`. Antes de adicionar uma migration, revisar tipos, índices, papéis (`owner`, `admin`, `staff`), Storage privado e políticas para formulários públicos.
+## Aplicar o schema inicial
+
+1. Abra o projeto da DSS no Supabase.
+2. Acesse **SQL Editor** e crie uma nova query.
+3. Copie o conteúdo de `migrations/0001_initial_schema.sql`.
+4. Execute a query e confirme que as tabelas, enums, função de bootstrap, bucket privado e políticas foram criados.
+
+A migration não insere clientes, serviços, solicitações ou qualquer dado fictício. O catálogo `service_types` deve ser cadastrado com os serviços reais da DSS numa etapa posterior.
+
+## Primeiro administrador
+
+Depois de criar o primeiro usuário em **Authentication > Users**, o fluxo de onboarding deve chamar a função RPC `bootstrap_company(company_name, company_slug)` uma única vez para criar a empresa e o perfil `owner`. A função impede que um usuário que já tenha perfil crie outro bootstrap.
+
+Exemplo de chamada no cliente, somente depois da migration aplicada:
+
+```ts
+const { data, error } = await supabase.rpc('bootstrap_company', {
+  company_name: 'Deni Sistemas de Segurança',
+  company_slug: 'dss',
+})
+```
+
+A senha e o usuário são gerenciados pelo Supabase Auth. Não coloque credenciais administrativas em código ou no frontend.
+
+## Próximos passos
+
+Após aplicar a migration, a próxima entrega pode conectar o cadastro real de serviços, clientes e solicitações ao painel. Os formulários públicos devem passar por uma Edge Function ou outra camada de proteção antes de criar registros anonimamente, para que rate limiting e antispam não dependam apenas do navegador.

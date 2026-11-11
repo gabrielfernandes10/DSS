@@ -11,6 +11,8 @@ VITE_SUPABASE_ANON_KEY=
 
 `VITE_SUPABASE_ANON_KEY` é a chave pública do projeto Supabase e não substitui políticas RLS. Não usar `service_role`, tokens administrativos ou senhas em variáveis expostas ao Vite.
 
+As duas variáveis já foram configuradas no ambiente gerenciado do projeto DSS por cartão seguro. Elas não são gravadas em `.env`, não aparecem no repositório e não devem ser copiadas para a documentação.
+
 ## Preparação futura
 
 1. Criar ou selecionar o projeto Supabase da DSS.
