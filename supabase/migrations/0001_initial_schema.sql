@@ -334,7 +334,10 @@ BEGIN
   FOR policy_record IN
     SELECT schemaname, tablename, policyname
     FROM pg_policies
-    WHERE policyname LIKE 'company %'
+    WHERE (
+        policyname LIKE 'company %'
+        OR policyname IN ('users can read their company profiles', 'owners and admins can update profiles')
+      )
       AND (
         (schemaname = 'public' AND tablename IN (
           'companies', 'profiles', 'customers', 'customer_addresses', 'service_types',
