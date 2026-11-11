@@ -10,6 +10,7 @@ import { ContactPage } from '../pages/public/ContactPage'
 import { HomePage } from '../pages/public/HomePage'
 import { ServicesPage } from '../pages/public/ServicesPage'
 import { DashboardPage } from '../pages/admin/DashboardPage'
+import { FirstAccessPage } from '../pages/admin/FirstAccessPage'
 import { LoginPage } from '../pages/admin/LoginPage'
 import { ModulePage } from '../pages/admin/ModulePage'
 import { SettingsPage } from '../pages/admin/SettingsPage'
@@ -30,6 +31,7 @@ export default function App() {
       <Route path="*" element={<NotFoundPage />} />
     </Route>
     <Route path="/painel/login" element={<LoginPage />} />
+    <Route path="/painel/primeiro-acesso" element={<FirstAccessPage />} />
     <Route path="/painel" element={<AuthGuard><AdminLayout /></AuthGuard>}>
       <Route index element={<DashboardPage />} />
       <Route path="clientes" element={<ModulePage eyebrow="Relacionamento" title="Clientes" description="Organize pessoas e condomínios atendidos pela DSS, com seus endereços e histórico de relacionamento." icon={Users} actionLabel="Novo cliente" />} />

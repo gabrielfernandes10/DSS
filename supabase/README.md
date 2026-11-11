@@ -26,6 +26,12 @@ const { data, error } = await supabase.rpc('bootstrap_company', {
 
 A senha e o usuário são gerenciados pelo Supabase Auth. Não coloque credenciais administrativas em código ou no frontend.
 
+## Convite e primeiro acesso
+
+No Supabase, configure **Authentication > URL Configuration**. O **Site URL** deve ser uma URL HTTPS pública do website, nunca `localhost` para convites usados em outro computador. Em **Additional Redirect URLs**, inclua a URL pública com `/painel/primeiro-acesso` e, para desenvolvimento local, `http://localhost:3000/**`. Depois de salvar, reenvie o convite em **Authentication > Users**, porque links de convite antigos podem continuar usando o redirecionamento anterior e expiram conforme a configuração de OTP do projeto.
+
+Ao abrir um convite válido, o Supabase cria a sessão e a rota `/painel/primeiro-acesso` permite definir a senha. A sessão é processada pelo cliente Supabase com `detectSessionInUrl` habilitado; nenhum token é persistido manualmente pela aplicação.
+
 ## Próximos passos
 
 Após aplicar a migration, a próxima entrega pode conectar o cadastro real de serviços, clientes e solicitações ao painel. Os formulários públicos devem passar por uma Edge Function ou outra camada de proteção antes de criar registros anonimamente, para que rate limiting e antispam não dependam apenas do navegador.
