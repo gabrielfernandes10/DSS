@@ -9,6 +9,8 @@ export function FirstAccessPage() {
   const navigate = useNavigate()
   const [checkingSession, setCheckingSession] = useState(true)
   const [hasSession, setHasSession] = useState(false)
+  const [companyName, setCompanyName] = useState('Deni Sistemas de Segurança')
+  const [companySlug, setCompanySlug] = useState('dss')
   const [password, setPassword] = useState('')
   const [confirmation, setConfirmation] = useState('')
   const [error, setError] = useState('')
@@ -30,13 +32,21 @@ export function FirstAccessPage() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setError('')
+    const normalizedSlug = companySlug.trim().toLowerCase().replace(/[^a-z0-9-]/g, '-')
+    if (!companyName.trim()) { setError('Informe o nome da empresa.'); return }
+    if (!normalizedSlug) { setError('Informe um slug para a empresa.'); return }
     if (password.length < 8) { setError('A senha precisa ter pelo menos 8 caracteres.'); return }
     if (password !== confirmation) { setError('As senhas não conferem.'); return }
     if (!supabase) { setError('A integração com o Supabase não está disponível neste ambiente.'); return }
     setSubmitting(true)
     const { error: updateError } = await supabase.auth.updateUser({ password })
+    if (updateError) { setSubmitting(false); setError('Não foi possível definir a senha. Solicite um novo convite e tente novamente.'); return }
+    const { error: bootstrapError } = await supabase.rpc('bootstrap_company', { company_name: companyName.trim(), company_slug: normalizedSlug })
     setSubmitting(false)
-    if (updateError) { setError('Não foi possível definir a senha. Solicite um novo convite e tente novamente.'); return }
+    if (bootstrapError && !bootstrapError.message.includes('profile_already_exists')) {
+      setError('A senha foi definida, mas a empresa ainda não foi criada. Aplique a migration do Supabase e tente novamente.')
+      return
+    }
     setSuccess(true)
     window.setTimeout(() => navigate('/painel'), 700)
   }
@@ -45,7 +55,7 @@ export function FirstAccessPage() {
   if (checkingSession) return <StatusCard title="Validando seu convite…" description="Aguarde enquanto confirmamos a sessão segura." />
   if (!hasSession) return <StatusCard title="Convite não encontrado." description="Abra novamente o link recebido por e-mail. Se ele expirou, envie um novo convite pelo Supabase Auth." action="Voltar ao login" />
 
-  return <div className="grid min-h-screen bg-mist lg:grid-cols-[.9fr_1.1fr]"><section className="relative hidden overflow-hidden bg-navy p-10 text-white lg:flex lg:flex-col lg:justify-between"><div className="absolute inset-0 bg-circuit-grid bg-[length:38px_38px] opacity-30" /><div className="relative"><BrandMark dark /><div className="mt-24 max-w-md"><Badge tone="navy"><ShieldCheck className="h-3.5 w-3.5" /> Convite confirmado</Badge><h1 className="mt-6 font-display text-5xl font-extrabold leading-tight tracking-[-0.05em]">Seu acesso DSS começa aqui.</h1><p className="mt-6 text-base leading-7 text-white/60">Defina uma senha segura para entrar no painel administrativo da empresa.</p></div></div><p className="relative text-xs text-white/35">DSS — Deni Sistemas de Segurança</p></section><main className="flex items-center justify-center p-5 sm:p-10"><div className="w-full max-w-md"><div className="mb-10 lg:hidden"><BrandMark /></div><Badge tone="blue"><KeyRound className="h-3.5 w-3.5" /> Primeiro acesso</Badge><h2 className="mt-5 font-display text-4xl font-extrabold tracking-[-0.05em] text-navy">Defina sua senha.</h2><p className="mt-4 text-sm leading-6 text-slate-600">Depois disso, você poderá entrar no painel com seu e-mail.</p>{success ? <div className="mt-9 rounded-[2rem] border border-cyan/30 bg-cyan/10 p-8 text-center"><CheckCircle2 className="mx-auto h-10 w-10 text-brand" /><h3 className="mt-5 font-display text-2xl font-extrabold text-navy">Senha definida</h3><p className="mt-3 text-sm leading-6 text-slate-600">Redirecionando para o painel DSS…</p></div> : <form onSubmit={handleSubmit} className="mt-9 rounded-[2rem] border border-line bg-white p-6 shadow-soft sm:p-8"><Field label="Nova senha" type="password" placeholder="Mínimo de 8 caracteres" value={password} onChange={(event) => setPassword(event.target.value)} required /><Field label="Confirme a senha" type="password" placeholder="Digite novamente" className="mt-5" value={confirmation} onChange={(event) => setConfirmation(event.target.value)} required />{error && <div className="mt-5 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm leading-6 text-red-700" role="alert">{error}</div>}<Button type="submit" className="mt-7 w-full" disabled={submitting}>{submitting ? 'Salvando…' : 'Definir senha'} {!submitting && <ArrowRight className="h-4 w-4" />}</Button></form>}<p className="mt-6 text-center text-sm text-slate-500"><Link to="/" className="font-bold text-brand hover:underline">Voltar ao website</Link></p></div></main></div>
+  return <div className="grid min-h-screen bg-mist lg:grid-cols-[.9fr_1.1fr]"><section className="relative hidden overflow-hidden bg-navy p-10 text-white lg:flex lg:flex-col lg:justify-between"><div className="absolute inset-0 bg-circuit-grid bg-[length:38px_38px] opacity-30" /><div className="relative"><BrandMark dark /><div className="mt-24 max-w-md"><Badge tone="navy"><ShieldCheck className="h-3.5 w-3.5" /> Convite confirmado</Badge><h1 className="mt-6 font-display text-5xl font-extrabold leading-tight tracking-[-0.05em]">Seu acesso DSS começa aqui.</h1><p className="mt-6 text-base leading-7 text-white/60">Defina sua senha e identifique a empresa para liberar o primeiro acesso administrativo.</p></div></div><p className="relative text-xs text-white/35">DSS — Deni Sistemas de Segurança</p></section><main className="flex items-center justify-center p-5 sm:p-10"><div className="w-full max-w-md"><div className="mb-10 lg:hidden"><BrandMark /></div><Badge tone="blue"><KeyRound className="h-3.5 w-3.5" /> Primeiro acesso</Badge><h2 className="mt-5 font-display text-4xl font-extrabold tracking-[-0.05em] text-navy">Configure a DSS.</h2><p className="mt-4 text-sm leading-6 text-slate-600">Defina sua senha e confirme os dados básicos da empresa.</p>{success ? <div className="mt-9 rounded-[2rem] border border-cyan/30 bg-cyan/10 p-8 text-center"><CheckCircle2 className="mx-auto h-10 w-10 text-brand" /><h3 className="mt-5 font-display text-2xl font-extrabold text-navy">Acesso configurado</h3><p className="mt-3 text-sm leading-6 text-slate-600">Redirecionando para o painel DSS…</p></div> : <form onSubmit={handleSubmit} className="mt-9 rounded-[2rem] border border-line bg-white p-6 shadow-soft sm:p-8"><Field label="Nome da empresa" value={companyName} onChange={(event) => setCompanyName(event.target.value)} required /><Field label="Identificador da empresa" hint="Use apenas letras, números e hífen." className="mt-5" value={companySlug} onChange={(event) => setCompanySlug(event.target.value)} required /><Field label="Nova senha" type="password" placeholder="Mínimo de 8 caracteres" className="mt-5" value={password} onChange={(event) => setPassword(event.target.value)} required /><Field label="Confirme a senha" type="password" placeholder="Digite novamente" className="mt-5" value={confirmation} onChange={(event) => setConfirmation(event.target.value)} required />{error && <div className="mt-5 rounded-2xl border border-red-200 bg-red-50 p-4 text-sm leading-6 text-red-700" role="alert">{error}</div>}<Button type="submit" className="mt-7 w-full" disabled={submitting}>{submitting ? 'Configurando…' : 'Concluir primeiro acesso'} {!submitting && <ArrowRight className="h-4 w-4" />}</Button></form>}<p className="mt-6 text-center text-sm text-slate-500"><Link to="/" className="font-bold text-brand hover:underline">Voltar ao website</Link></p></div></main></div>
 }
 
 function StatusCard({ title, description, action }: { title: string; description: string; action?: string }) {
