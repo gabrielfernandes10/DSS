@@ -326,6 +326,28 @@ alter table public.appointments enable row level security;
 alter table public.financial_transactions enable row level security;
 alter table public.activity_logs enable row level security;
 
+-- Permite reexecutar esta migration após uma execução parcial. O filtro remove apenas
+-- políticas nomeadas pela DSS nas tabelas desta migration; não toca políticas externas.
+DO $$
+DECLARE policy_record record;
+BEGIN
+  FOR policy_record IN
+    SELECT schemaname, tablename, policyname
+    FROM pg_policies
+    WHERE policyname LIKE 'company %'
+      AND (
+        (schemaname = 'public' AND tablename IN (
+          'companies', 'profiles', 'customers', 'customer_addresses', 'service_types',
+          'service_requests', 'request_attachments', 'quotes', 'quote_items',
+          'service_orders', 'appointments', 'financial_transactions', 'activity_logs'
+        ))
+        OR (schemaname = 'storage' AND tablename = 'objects')
+      )
+  LOOP
+    EXECUTE format('drop policy if exists %I on %I.%I', policy_record.policyname, policy_record.schemaname, policy_record.tablename);
+  END LOOP;
+END $$;
+
 create policy "company members can read companies" on public.companies for select to authenticated using (public.has_company_access(id));
 create policy "company owners can update companies" on public.companies for update to authenticated using (public.has_company_role(id, array['owner', 'admin']::public.staff_role[])) with check (public.has_company_role(id, array['owner', 'admin']::public.staff_role[]));
 
