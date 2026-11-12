@@ -35,3 +35,15 @@ Ao abrir um convite válido, o Supabase cria a sessão e a rota `/painel/primeir
 ## Próximos passos
 
 Após aplicar a migration, a próxima entrega pode conectar o cadastro real de serviços, clientes e solicitações ao painel. Os formulários públicos devem passar por uma Edge Function ou outra camada de proteção antes de criar registros anonimamente, para que rate limiting e antispam não dependam apenas do navegador.
+
+## Login com Google
+
+O login DSS inclui o botão **Continuar com Google**. Para habilitá-lo:
+
+1. No Google Cloud Console, crie um cliente OAuth do tipo **Web application**.
+2. Em **Authorized JavaScript origins**, adicione `https://dssseguranca-gvx4zvqc.manus.space`.
+3. Em **Authorized redirect URIs**, copie exatamente a callback exibida na página **Authentication > Providers > Google** do projeto Supabase. Ela tem o formato `https://<project-ref>.supabase.co/auth/v1/callback`.
+4. No Supabase, abra **Authentication > Providers > Google**, ative o provedor e cole o Client ID e o Client Secret diretamente no painel.
+5. Em **Authentication > URL Configuration**, mantenha o Site URL como `https://dssseguranca-gvx4zvqc.manus.space` e autorize `https://dssseguranca-gvx4zvqc.manus.space/painel/primeiro-acesso`.
+
+O Client Secret do Google nunca deve ser colocado no código, em `.env` do frontend ou enviado no chat. O Supabase conduz o OAuth e redireciona a sessão para o onboarding, que cria o perfil `owner` quando necessário.
