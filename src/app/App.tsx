@@ -1,5 +1,4 @@
-import { useEffect } from 'react'
-import { Navigate, Route, Routes, useNavigate } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import { AdminLayout } from '../components/layout/AdminLayout'
 import { PublicLayout } from '../components/layout/PublicLayout'
 import { AuthGuard } from '../features/auth/AuthGuard'
@@ -21,33 +20,12 @@ import { FirstAccessPage } from '../pages/admin/FirstAccessPage'
 import { LoginPage } from '../pages/admin/LoginPage'
 import { ModulePage } from '../pages/admin/ModulePage'
 import { SettingsPage } from '../pages/admin/SettingsPage'
-import { supabase } from '../lib/supabase/client'
 
 function NotFoundPage() {
   return <div className="mx-auto flex min-h-[60vh] max-w-2xl flex-col items-center justify-center px-5 text-center"><p className="text-xs font-extrabold uppercase tracking-[0.2em] text-brand">404</p><h1 className="mt-4 font-display text-4xl font-extrabold text-navy">Página não encontrada.</h1><p className="mt-4 text-slate-600">O endereço pode ter mudado. Volte ao início para continuar.</p><a href="/" className="mt-7 rounded-full bg-navy px-5 py-3 text-sm font-bold text-white">Voltar ao início</a></div>
 }
 
 function HomeEntryPage() {
-  const navigate = useNavigate()
-
-  useEffect(() => {
-    const client = supabase
-    if (!client) return
-    let active = true
-    const routeAuthenticatedUser = async (session: { user: { id: string } }) => {
-      const { data: profile, error } = await client.from('profiles').select('id').eq('id', session.user.id).maybeSingle()
-      if (!active || error) return
-      navigate(profile ? '/painel' : '/painel/primeiro-acesso', { replace: true })
-    }
-    void client.auth.getSession().then(({ data }) => {
-      if (data.session) void routeAuthenticatedUser(data.session)
-    })
-    const { data: listener } = client.auth.onAuthStateChange((_event, session) => {
-      if (session) window.setTimeout(() => { void routeAuthenticatedUser(session) }, 0)
-    })
-    return () => { active = false; listener.subscription.unsubscribe() }
-  }, [navigate])
-
   return <HomePage />
 }
 
