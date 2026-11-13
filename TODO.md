@@ -36,6 +36,8 @@
 - [x] O módulo Agenda possui criação de compromissos, vínculo com cliente, ordem e responsável, validação de horário, busca, status e persistência em `appointments`.
 - [ ] Agenda possui visão mensal/semanal, conflitos de horário, lembretes e edição detalhada.
 - [x] Agenda possui exclusão com confirmação, respeitando o RLS de administradores.
+- [x] O módulo Financeiro possui receitas e despesas, categorias, valores, datas, pagamento/pendência, vínculo opcional com ordem de serviço, busca, totais de receitas/despesas/saldo, edição e exclusão com confirmação na tabela `financial_transactions`.
+- [ ] Financeiro possui conciliação bancária, anexos de comprovantes, filtros por período/categoria e relatórios exportáveis.
 
 ## Integração Supabase preparada
 
