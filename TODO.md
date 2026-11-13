@@ -32,7 +32,9 @@
 - [x] O botão de envio de orçamento, a Edge Function `send-quote-email` e o registro de status/atividade foram implementados com Resend sem expor segredo no frontend.
 - [ ] Configurar `RESEND_API_KEY`, `RESEND_FROM_EMAIL` e publicar a Edge Function no projeto Supabase para ativar o envio real.
 - [x] O módulo Ordens de serviço possui vínculo com cliente, orçamento e solicitação, responsável, prioridade, agendamento, descrição, busca, status e persistência em `service_orders`.
-- [ ] Ordens de serviço possuem checklist técnico, anexos, conclusão com evidências e integração completa com Agenda.
+- [x] Ordens de serviço possuem página de checklist técnico persistido, indicador de progresso e etapas padrão de execução.
+- [x] Ordens de serviço permitem anexar fotos e PDFs de evidência no Storage privado, com registros em `service_order_evidence` e políticas RLS por empresa.
+- [ ] Aplicar `supabase/migrations/0004_service_order_checklist_evidence.sql` no SQL Editor do projeto Supabase antes de usar checklist e evidências.
 - [x] Ordens de serviço possuem edição detalhada de cliente, orçamento, solicitação, responsável, prioridade, descrição, agendamento e preservação do status atual.
 - [x] Ordens de serviço possuem exclusão com confirmação, respeitando o RLS de administradores.
 - [x] O módulo Agenda possui criação de compromissos, vínculo com cliente, ordem e responsável, validação de horário, busca, status e persistência em `appointments`.

@@ -32,9 +32,11 @@ No Supabase, configure **Authentication > URL Configuration**. O **Site URL** de
 
 Ao abrir um convite válido, o Supabase cria a sessão e a rota `/painel/primeiro-acesso` permite definir a senha. A sessão é processada pelo cliente Supabase com `detectSessionInUrl` habilitado; nenhum token é persistido manualmente pela aplicação.
 
-## Próximos passos
+## Checklist e evidências de Ordens de Serviço
 
-Após aplicar as migrations e publicar as funções, a próxima entrega pode avançar para anexos, automações e melhorias do fluxo administrativo. Os formulários públicos já passam pela Edge Function descrita abaixo, em vez de criarem registros anonimamente direto do navegador.
+Para habilitar o checklist técnico e o upload privado de fotos/PDFs nas Ordens de Serviço, execute `migrations/0004_service_order_checklist_evidence.sql` no SQL Editor depois do schema inicial. A migration cria as tabelas `service_order_checklist_items` e `service_order_evidence`, o bucket privado `service-order-evidence` e as políticas RLS por `company_id`. O frontend aceita arquivos de até 10 MB e não expõe URLs públicas dos anexos.
+
+Os formulários públicos passam pela Edge Function descrita abaixo, em vez de criarem registros anonimamente direto do navegador.
 
 ## Formulários públicos
 
@@ -73,4 +75,4 @@ Para habilitar o envio:
 4. Publique a função `send-quote-email` pelo Supabase CLI ou pelo fluxo de Edge Functions do Dashboard.
 5. No painel DSS, abra **Orçamentos** e use **Enviar e-mail** em um orçamento cujo cliente tenha e-mail cadastrado.
 
-Se a função ainda não estiver publicada ou os segredos não existirem, o botão não altera o orçamento e o painel informa que o Resend precisa ser configurado. O envio atual é HTML responsivo; geração de PDF e aprovação por link ficam para uma etapa posterior.
+Se a função ainda não estiver publicada ou os segredos não existirem, o botão não altera o orçamento e o painel informa que o Resend precisa ser configurado. O envio atual é HTML responsivo; a página imprimível permite salvar o orçamento como PDF pelo navegador.
