@@ -37,6 +37,8 @@
 - [ ] Agenda possui visão mensal/semanal, conflitos de horário, lembretes e edição detalhada.
 - [x] Agenda possui exclusão com confirmação, respeitando o RLS de administradores.
 - [x] O módulo Financeiro possui receitas e despesas, categorias, valores, datas, pagamento/pendência, vínculo opcional com ordem de serviço, busca, totais de receitas/despesas/saldo, edição e exclusão com confirmação na tabela `financial_transactions`.
+- [x] O módulo Financeiro permite registrar receita e despesa no mesmo lançamento, vinculando os movimentos por `operation_id` e calculando o lucro da operação automaticamente.
+- [ ] Aplicar `supabase/migrations/0002_financial_operation_id.sql` no SQL Editor do projeto Supabase antes de usar lançamentos compostos.
 - [ ] Financeiro possui conciliação bancária, anexos de comprovantes, filtros por período/categoria e relatórios exportáveis.
 
 ## Integração Supabase preparada
