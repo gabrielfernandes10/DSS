@@ -36,12 +36,19 @@
 - [x] Ordens de serviço possuem edição detalhada de cliente, orçamento, solicitação, responsável, prioridade, descrição, agendamento e preservação do status atual.
 - [x] Ordens de serviço possuem exclusão com confirmação, respeitando o RLS de administradores.
 - [x] O módulo Agenda possui criação de compromissos, vínculo com cliente, ordem e responsável, validação de horário, busca, status e persistência em `appointments`.
-- [ ] Agenda possui visão mensal/semanal, conflitos de horário, lembretes e edição detalhada.
+- [ ] Agenda possui visão mensal/semanal e lembretes.
+- [x] Agenda possui edição detalhada de cliente, ordem de serviço, responsável, início, fim, observações e preservação do status atual.
+- [x] Agenda bloqueia sobreposição de horários para o mesmo responsável ou ordem de serviço, ignorando compromissos cancelados.
 - [x] Agenda possui exclusão com confirmação, respeitando o RLS de administradores.
 - [x] O módulo Financeiro possui receitas e despesas, categorias, valores, datas, pagamento/pendência, vínculo opcional com ordem de serviço, busca, totais de receitas/despesas/saldo, edição e exclusão com confirmação na tabela `financial_transactions`.
 - [x] O módulo Financeiro permite registrar receita e despesa no mesmo lançamento, vinculando os movimentos por `operation_id` e calculando o lucro da operação automaticamente.
 - [ ] Aplicar `supabase/migrations/0002_financial_operation_id.sql` no SQL Editor do projeto Supabase antes de usar lançamentos compostos.
 - [ ] Financeiro possui conciliação bancária, anexos de comprovantes, filtros por período/categoria e relatórios exportáveis.
+
+## Próximas prioridades comerciais
+
+- [ ] Gerar PDF estilizado de orçamento com padrão visual DSS, incluindo cliente, validade, itens, quantidades, valores, desconto, total e observações.
+- [ ] Disponibilizar o PDF do orçamento para download e envio por e-mail ou WhatsApp, com registro do envio e sem expor credenciais no frontend.
 
 ## Integração Supabase preparada
 
