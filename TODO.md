@@ -23,7 +23,9 @@
 - [ ] Solicitações possuem anexos e automações para orçamento e ordem de serviço.
 - [x] O catálogo de serviços possui cadastro, catálogo inicial real da DSS, ativação/desativação e integração com o formulário de Solicitações.
 - [x] O módulo Orçamentos possui vínculo com cliente e solicitação, itens, quantidade, valor unitário, subtotal, desconto, total, validade, status e persistência em `quotes`/`quote_items`.
-- [ ] Orçamentos possuem edição detalhada, envio ao cliente e aprovação pública ou por link seguro.
+- [ ] Orçamentos possuem edição detalhada e aprovação pública ou por link seguro.
+- [x] O botão de envio de orçamento, a Edge Function `send-quote-email` e o registro de status/atividade foram implementados com Resend sem expor segredo no frontend.
+- [ ] Configurar `RESEND_API_KEY`, `RESEND_FROM_EMAIL` e publicar a Edge Function no projeto Supabase para ativar o envio real.
 
 ## Integração Supabase preparada
 

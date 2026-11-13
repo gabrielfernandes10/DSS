@@ -47,3 +47,17 @@ O login DSS inclui o botão **Continuar com Google**. Para habilitá-lo:
 5. Em **Authentication > URL Configuration**, mantenha o Site URL como `https://dssseguranca-gvx4zvqc.manus.space` e autorize `https://dssseguranca-gvx4zvqc.manus.space/painel/primeiro-acesso`.
 
 O Client Secret do Google nunca deve ser colocado no código, em `.env` do frontend ou enviado no chat. O Supabase conduz o OAuth e redireciona a sessão para o onboarding, que cria o perfil `owner` quando necessário.
+
+## Envio de orçamentos por e-mail
+
+O painel possui a Edge Function `functions/send-quote-email/index.ts`. Ela valida a sessão do usuário, consulta o orçamento respeitando o RLS, monta o HTML, envia pelo Resend, atualiza o orçamento para `sent` e grava uma atividade em `activity_logs`. A chave do Resend não é usada no frontend.
+
+Para habilitar o envio:
+
+1. Crie uma conta no Resend e verifique um domínio ou use um remetente de teste permitido pelo Resend.
+2. No Supabase, abra **Edge Functions > Secrets** e crie `RESEND_API_KEY` com a chave do Resend.
+3. Crie também `RESEND_FROM_EMAIL`, por exemplo `DSS <orcamentos@seudominio.com.br>`; durante testes pode usar o remetente permitido pelo Resend.
+4. Publique a função `send-quote-email` pelo Supabase CLI ou pelo fluxo de Edge Functions do Dashboard.
+5. No painel DSS, abra **Orçamentos** e use **Enviar e-mail** em um orçamento cujo cliente tenha e-mail cadastrado.
+
+Se a função ainda não estiver publicada ou os segredos não existirem, o botão não altera o orçamento e o painel informa que o Resend precisa ser configurado. O envio atual é HTML responsivo; geração de PDF e aprovação por link ficam para uma etapa posterior.
