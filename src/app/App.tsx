@@ -1,4 +1,4 @@
-import { CalendarDays, CircleDollarSign, ClipboardList, FileText, Users, Wrench } from 'lucide-react'
+import { CalendarDays, CircleDollarSign, ClipboardList, FileText, Wrench } from 'lucide-react'
 import { useEffect } from 'react'
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom'
 import { AdminLayout } from '../components/layout/AdminLayout'
@@ -10,6 +10,7 @@ import { BudgetPage } from '../pages/public/BudgetPage'
 import { ContactPage } from '../pages/public/ContactPage'
 import { HomePage } from '../pages/public/HomePage'
 import { ServicesPage } from '../pages/public/ServicesPage'
+import { CustomersPage } from '../pages/admin/CustomersPage'
 import { DashboardPage } from '../pages/admin/DashboardPage'
 import { FirstAccessPage } from '../pages/admin/FirstAccessPage'
 import { LoginPage } from '../pages/admin/LoginPage'
@@ -60,7 +61,7 @@ export default function App() {
     <Route path="/painel/primeiro-acesso" element={<FirstAccessPage />} />
     <Route path="/painel" element={<AuthGuard><AdminLayout /></AuthGuard>}>
       <Route index element={<DashboardPage />} />
-      <Route path="clientes" element={<ModulePage eyebrow="Relacionamento" title="Clientes" description="Organize pessoas e condomínios atendidos pela DSS, com seus endereços e histórico de relacionamento." icon={Users} actionLabel="Novo cliente" />} />
+      <Route path="clientes" element={<CustomersPage />} />
       <Route path="solicitacoes" element={<ModulePage eyebrow="Entrada" title="Solicitações" description="Acompanhe pedidos de orçamento e assistência que chegam pelos canais da DSS." icon={ClipboardList} actionLabel="Nova solicitação" />} />
       <Route path="orcamentos" element={<ModulePage eyebrow="Comercial" title="Orçamentos" description="Estruture propostas, itens e status de aprovação sem perder o contexto do pedido original." icon={FileText} actionLabel="Novo orçamento" />} />
       <Route path="ordens" element={<ModulePage eyebrow="Operação" title="Ordens de serviço" description="Transforme serviços aprovados em execução organizada, com prioridade e responsável." icon={Wrench} actionLabel="Nova ordem" />} />

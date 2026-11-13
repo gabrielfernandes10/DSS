@@ -17,6 +17,8 @@
 - [x] O painel possui entrada preparada para autenticação e rotas para Dashboard, Clientes, Solicitações, Orçamentos, Ordens de serviço, Agenda, Financeiro e Configurações.
 - [x] O painel é privado por arquitetura de rotas, não expõe dados administrativos publicamente e apresenta estados vazios sem inventar registros.
 - [x] A estrutura permite começar com um administrador e evoluir para novos funcionários e papéis.
+- [x] O módulo Clientes possui listagem, busca, cadastro de pessoa ou condomínio, estados de carregamento/erro/vazio e persistência na tabela `customers` respeitando o `company_id` do perfil autenticado.
+- [ ] O módulo Clientes possui edição, exclusão, endereços vinculados e histórico de relacionamento.
 
 ## Integração Supabase preparada
 
