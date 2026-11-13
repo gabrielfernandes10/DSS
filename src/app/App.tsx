@@ -6,6 +6,7 @@ import { AboutPage } from '../pages/public/AboutPage'
 import { AssistancePage } from '../pages/public/AssistancePage'
 import { BudgetPage } from '../pages/public/BudgetPage'
 import { ContactPage } from '../pages/public/ContactPage'
+import { PublicQuotePage } from '../pages/public/PublicQuotePage'
 import { HomePage } from '../pages/public/HomePage'
 import { ServicesPage } from '../pages/public/ServicesPage'
 import { CustomersPage } from '../pages/admin/CustomersPage'
@@ -40,6 +41,7 @@ export default function App() {
       <Route path="/orcamento" element={<BudgetPage />} />
       <Route path="/assistencia" element={<AssistancePage />} />
       <Route path="/contato" element={<ContactPage />} />
+      <Route path="/orcamento/:token" element={<PublicQuotePage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Route>
     <Route path="/painel/login" element={<LoginPage />} />

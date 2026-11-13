@@ -38,6 +38,10 @@ Para habilitar o checklist técnico e o upload privado de fotos/PDFs nas Ordens 
 
 Os formulários públicos passam pela Edge Function descrita abaixo, em vez de criarem registros anonimamente direto do navegador.
 
+## Aprovação pública de orçamentos
+
+Para habilitar a aprovação sem login, execute `migrations/0005_public_quote_approval.sql` no SQL Editor e publique `functions/public-quote/index.ts` como a Edge Function `public-quote`. O painel gera tokens aleatórios, grava apenas o hash no banco e copia um link com validade para envio ao cliente. A função pública consulta e atualiza a proposta usando somente o token; o `service_role` permanece exclusivamente no runtime da Edge Function.
+
 ## Formulários públicos
 
 Os formulários de orçamento, assistência e contato chamam a Edge Function `create-public-request`. Ela usa `SUPABASE_SERVICE_ROLE_KEY` somente no runtime da função, localiza a empresa pelo slug, cria ou atualiza o cliente, registra uma `service_request` com origem `public_form` e aplica honeypot e limite de frequência por hash de IP/e-mail ou telefone.
