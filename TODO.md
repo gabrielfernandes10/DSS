@@ -19,6 +19,8 @@
 - [x] A estrutura permite começar com um administrador e evoluir para novos funcionários e papéis.
 - [x] O módulo Clientes possui listagem, busca, cadastro de pessoa ou condomínio, estados de carregamento/erro/vazio e persistência na tabela `customers` respeitando o `company_id` do perfil autenticado.
 - [ ] O módulo Clientes possui edição, exclusão, endereços vinculados e histórico de relacionamento.
+- [x] O módulo Solicitações possui cadastro, vínculo opcional com cliente e serviço, prioridade, busca, filtro por status, atualização de status e persistência na tabela `service_requests` respeitando o `company_id` do perfil autenticado.
+- [ ] Solicitações possuem anexos, catálogo de serviços administrável e automações para orçamento e ordem de serviço.
 
 ## Integração Supabase preparada
 
