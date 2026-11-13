@@ -21,7 +21,9 @@
 - [x] O módulo Clientes possui edição e exclusão com confirmação, respeitando o RLS; endereços vinculados e histórico de relacionamento permanecem pendentes.
 - [x] O módulo Solicitações possui cadastro, vínculo opcional com cliente e serviço, prioridade, busca, filtro por status, atualização de status e persistência na tabela `service_requests` respeitando o `company_id` do perfil autenticado.
 - [ ] Solicitações possuem anexos e automações para orçamento e ordem de serviço.
+- [x] Solicitações possuem edição e exclusão com confirmação, além da atualização de status, respeitando o RLS.
 - [x] O catálogo de serviços possui cadastro, catálogo inicial real da DSS, ativação/desativação e integração com o formulário de Solicitações.
+- [x] Serviços possuem edição, exclusão com confirmação e ativação/desativação, respeitando o RLS de administradores.
 - [x] O módulo Orçamentos possui vínculo com cliente e solicitação, itens, quantidade, valor unitário, subtotal, desconto, total, validade, status e persistência em `quotes`/`quote_items`.
 - [ ] Orçamentos possuem edição detalhada e aprovação pública ou por link seguro.
 - [x] O botão de envio de orçamento, a Edge Function `send-quote-email` e o registro de status/atividade foram implementados com Resend sem expor segredo no frontend.
