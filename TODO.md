@@ -26,12 +26,16 @@
 - [x] Serviços possuem edição, exclusão com confirmação e ativação/desativação, respeitando o RLS de administradores.
 - [x] O módulo Orçamentos possui vínculo com cliente e solicitação, itens, quantidade, valor unitário, subtotal, desconto, total, validade, status e persistência em `quotes`/`quote_items`.
 - [ ] Orçamentos possuem edição detalhada e aprovação pública ou por link seguro.
+- [x] Orçamentos possuem exclusão com confirmação e remoção dos itens vinculados por cascata.
+- [ ] Orçamentos possuem edição detalhada dos dados e itens.
 - [x] O botão de envio de orçamento, a Edge Function `send-quote-email` e o registro de status/atividade foram implementados com Resend sem expor segredo no frontend.
 - [ ] Configurar `RESEND_API_KEY`, `RESEND_FROM_EMAIL` e publicar a Edge Function no projeto Supabase para ativar o envio real.
 - [x] O módulo Ordens de serviço possui vínculo com cliente, orçamento e solicitação, responsável, prioridade, agendamento, descrição, busca, status e persistência em `service_orders`.
 - [ ] Ordens de serviço possuem edição detalhada, checklist técnico, anexos, conclusão com evidências e integração completa com Agenda.
+- [x] Ordens de serviço possuem exclusão com confirmação, respeitando o RLS de administradores.
 - [x] O módulo Agenda possui criação de compromissos, vínculo com cliente, ordem e responsável, validação de horário, busca, status e persistência em `appointments`.
 - [ ] Agenda possui visão mensal/semanal, conflitos de horário, lembretes e edição detalhada.
+- [x] Agenda possui exclusão com confirmação, respeitando o RLS de administradores.
 
 ## Integração Supabase preparada
 
