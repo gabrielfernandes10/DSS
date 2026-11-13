@@ -34,7 +34,20 @@ Ao abrir um convite válido, o Supabase cria a sessão e a rota `/painel/primeir
 
 ## Próximos passos
 
-Após aplicar a migration, a próxima entrega pode conectar o cadastro real de serviços, clientes e solicitações ao painel. Os formulários públicos devem passar por uma Edge Function ou outra camada de proteção antes de criar registros anonimamente, para que rate limiting e antispam não dependam apenas do navegador.
+Após aplicar as migrations e publicar as funções, a próxima entrega pode avançar para anexos, automações e melhorias do fluxo administrativo. Os formulários públicos já passam pela Edge Function descrita abaixo, em vez de criarem registros anonimamente direto do navegador.
+
+## Formulários públicos
+
+Os formulários de orçamento, assistência e contato chamam a Edge Function `create-public-request`. Ela usa `SUPABASE_SERVICE_ROLE_KEY` somente no runtime da função, localiza a empresa pelo slug, cria ou atualiza o cliente, registra uma `service_request` com origem `public_form` e aplica honeypot e limite de frequência por hash de IP/e-mail ou telefone.
+
+Para ativar essa integração:
+
+1. Execute `migrations/0003_public_submission_guards.sql` no SQL Editor.
+2. Confirme que o slug da empresa usado no `bootstrap_company` é `dss` ou configure `VITE_DSS_COMPANY_SLUG` no ambiente público com o slug correto.
+3. Publique `functions/create-public-request/index.ts` pelo Supabase CLI ou pelo fluxo de Edge Functions do Dashboard.
+4. Teste os três formulários públicos e confirme a solicitação em **Painel > Solicitações**.
+
+O frontend usa apenas a URL e a chave anon do Supabase. A `service_role` não deve ser colocada em `.env` do frontend, no repositório ou no navegador.
 
 ## Login com Google
 

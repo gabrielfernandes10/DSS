@@ -10,7 +10,8 @@
 
 - [x] O website possui as rotas Início, Serviços, Sobre a DSS, Solicitar orçamento, Assistência técnica e Contato.
 - [x] As páginas apresentam somente informações fornecidas no briefing da DSS, sem dados fictícios apresentados como reais.
-- [ ] Orçamento, assistência e contato possuem formulários simples com persistência real, estados completos de carregamento, erro e sucesso, e proteção contra spam.
+- [x] Orçamento, assistência e contato possuem formulários com persistência encaminhada à Edge Function, estados de carregamento/erro/sucesso, honeypot e limite básico de frequência.
+- [ ] Aplicar `supabase/migrations/0003_public_submission_guards.sql` e publicar `create-public-request` para ativar os formulários no ambiente Supabase real.
 
 ## Painel administrativo
 
