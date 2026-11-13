@@ -18,7 +18,7 @@
 - [x] O painel é privado por arquitetura de rotas, não expõe dados administrativos publicamente e apresenta estados vazios sem inventar registros.
 - [x] A estrutura permite começar com um administrador e evoluir para novos funcionários e papéis.
 - [x] O módulo Clientes possui listagem, busca, cadastro de pessoa ou condomínio, estados de carregamento/erro/vazio e persistência na tabela `customers` respeitando o `company_id` do perfil autenticado.
-- [ ] O módulo Clientes possui edição, exclusão, endereços vinculados e histórico de relacionamento.
+- [x] O módulo Clientes possui edição e exclusão com confirmação, respeitando o RLS; endereços vinculados e histórico de relacionamento permanecem pendentes.
 - [x] O módulo Solicitações possui cadastro, vínculo opcional com cliente e serviço, prioridade, busca, filtro por status, atualização de status e persistência na tabela `service_requests` respeitando o `company_id` do perfil autenticado.
 - [ ] Solicitações possuem anexos e automações para orçamento e ordem de serviço.
 - [x] O catálogo de serviços possui cadastro, catálogo inicial real da DSS, ativação/desativação e integração com o formulário de Solicitações.
