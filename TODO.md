@@ -28,6 +28,8 @@
 - [ ] Configurar `RESEND_API_KEY`, `RESEND_FROM_EMAIL` e publicar a Edge Function no projeto Supabase para ativar o envio real.
 - [x] O módulo Ordens de serviço possui vínculo com cliente, orçamento e solicitação, responsável, prioridade, agendamento, descrição, busca, status e persistência em `service_orders`.
 - [ ] Ordens de serviço possuem edição detalhada, checklist técnico, anexos, conclusão com evidências e integração completa com Agenda.
+- [x] O módulo Agenda possui criação de compromissos, vínculo com cliente, ordem e responsável, validação de horário, busca, status e persistência em `appointments`.
+- [ ] Agenda possui visão mensal/semanal, conflitos de horário, lembretes e edição detalhada.
 
 ## Integração Supabase preparada
 

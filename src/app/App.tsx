@@ -1,4 +1,4 @@
-import { CalendarDays, CircleDollarSign } from 'lucide-react'
+import { CircleDollarSign } from 'lucide-react'
 import { useEffect } from 'react'
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom'
 import { AdminLayout } from '../components/layout/AdminLayout'
@@ -15,6 +15,7 @@ import { RequestsPage } from '../pages/admin/RequestsPage'
 import { ServiceTypesPage } from '../pages/admin/ServiceTypesPage'
 import { QuotesPage } from '../pages/admin/QuotesPage'
 import { ServiceOrdersPage } from '../pages/admin/ServiceOrdersPage'
+import { AppointmentsPage } from '../pages/admin/AppointmentsPage'
 import { DashboardPage } from '../pages/admin/DashboardPage'
 import { FirstAccessPage } from '../pages/admin/FirstAccessPage'
 import { LoginPage } from '../pages/admin/LoginPage'
@@ -70,7 +71,7 @@ export default function App() {
       <Route path="servicos" element={<ServiceTypesPage />} />
       <Route path="orcamentos" element={<QuotesPage />} />
       <Route path="ordens" element={<ServiceOrdersPage />} />
-      <Route path="agenda" element={<ModulePage eyebrow="Operação" title="Agenda" description="Visualize visitas, instalações e manutenções em um só lugar." icon={CalendarDays} actionLabel="Novo agendamento" />} />
+      <Route path="agenda" element={<AppointmentsPage />} />
       <Route path="financeiro" element={<ModulePage eyebrow="Gestão" title="Financeiro" description="Acompanhe receitas e despesas vinculadas à operação, com clareza para a gestão." icon={CircleDollarSign} actionLabel="Nova movimentação" />} />
       <Route path="configuracoes" element={<SettingsPage />} />
       <Route path="*" element={<Navigate to="/painel" replace />} />
