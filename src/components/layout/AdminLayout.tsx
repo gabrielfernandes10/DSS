@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { Bell, ChevronDown, Menu, X } from 'lucide-react'
-import { NavLink, Outlet, useLocation } from 'react-router-dom'
+import { Bell, ChevronDown, ExternalLink, Menu, X } from 'lucide-react'
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom'
 import { BrandMark } from '../brand/BrandMark'
 import { cn } from '../../lib/utils'
 
@@ -34,7 +34,7 @@ export function AdminLayout() {
   return <div className="min-h-screen bg-mist text-ink">
     <aside className={cn('fixed inset-y-0 left-0 z-50 flex w-72 flex-col bg-navy px-5 py-6 transition-transform duration-300 lg:translate-x-0', open ? 'translate-x-0' : '-translate-x-full')}>
       <div className="flex items-center justify-between"><BrandMark dark /><button className="rounded-lg p-2 text-white/70 lg:hidden" onClick={() => setOpen(false)} aria-label="Fechar menu"><X className="h-5 w-5" /></button></div>
-      <div className="mt-10"><p className="px-3 text-[10px] font-extrabold uppercase tracking-[0.2em] text-white/35">Operação</p><nav className="mt-3 space-y-1">{navigation.map((item) => <NavLink to={item.to} end={item.end} key={item.to} onClick={() => setOpen(false)} className={({ isActive }) => cn('flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold transition', isActive ? 'bg-white/10 text-white' : 'text-white/55 hover:bg-white/5 hover:text-white')}><span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/5 text-base text-cyan">{item.icon}</span>{item.label}</NavLink>)}</nav></div>
+      <div className="mt-10"><p className="px-3 text-[10px] font-extrabold uppercase tracking-[0.2em] text-white/35">Operação</p><nav className="mt-3 space-y-1">{navigation.map((item) => <NavLink to={item.to} end={item.end} key={item.to} onClick={() => setOpen(false)} className={({ isActive }) => cn('flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-bold transition', isActive ? 'bg-white/10 text-white' : 'text-white/55 hover:bg-white/5 hover:text-white')}><span className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/5 text-base text-cyan">{item.icon}</span>{item.label}</NavLink>)}</nav><Link to="/" onClick={() => setOpen(false)} className="mt-4 flex items-center gap-3 rounded-xl border border-cyan/30 px-3 py-3 text-sm font-bold text-cyan transition hover:bg-cyan/10"><span className="flex h-7 w-7 items-center justify-center rounded-lg bg-cyan/10"><ExternalLink className="h-4 w-4" /></span>Ver site público</Link></div>
       <div className="mt-auto rounded-2xl border border-white/10 bg-white/5 p-4"><p className="text-xs font-bold text-white/80">Fundação em preparação</p><p className="mt-2 text-xs leading-5 text-white/45">Conecte o projeto Supabase para ativar os dados do painel.</p></div>
     </aside>
     {open && <button className="fixed inset-0 z-40 bg-navy/40 lg:hidden" onClick={() => setOpen(false)} aria-label="Fechar menu" />}
