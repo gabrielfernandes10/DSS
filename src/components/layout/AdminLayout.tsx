@@ -7,6 +7,7 @@ import { cn } from '../../lib/utils'
 const navigation = [
   { to: '/painel', label: 'Dashboard', icon: '⌂', end: true },
   { to: '/painel/clientes', label: 'Clientes', icon: '◌' },
+  { to: '/painel/servicos', label: 'Serviços', icon: '✦' },
   { to: '/painel/solicitacoes', label: 'Solicitações', icon: '↗' },
   { to: '/painel/orcamentos', label: 'Orçamentos', icon: '◈' },
   { to: '/painel/ordens', label: 'Ordens de serviço', icon: '◇' },
@@ -17,6 +18,7 @@ const navigation = [
 const titles: Record<string, string> = {
   '/painel': 'Dashboard',
   '/painel/clientes': 'Clientes',
+  '/painel/servicos': 'Serviços',
   '/painel/solicitacoes': 'Solicitações',
   '/painel/orcamentos': 'Orçamentos',
   '/painel/ordens': 'Ordens de serviço',
