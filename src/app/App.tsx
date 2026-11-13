@@ -1,4 +1,4 @@
-import { CalendarDays, CircleDollarSign, ClipboardList, FileText, Wrench } from 'lucide-react'
+import { CalendarDays, CircleDollarSign, ClipboardList, Wrench } from 'lucide-react'
 import { useEffect } from 'react'
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom'
 import { AdminLayout } from '../components/layout/AdminLayout'
@@ -13,6 +13,7 @@ import { ServicesPage } from '../pages/public/ServicesPage'
 import { CustomersPage } from '../pages/admin/CustomersPage'
 import { RequestsPage } from '../pages/admin/RequestsPage'
 import { ServiceTypesPage } from '../pages/admin/ServiceTypesPage'
+import { QuotesPage } from '../pages/admin/QuotesPage'
 import { DashboardPage } from '../pages/admin/DashboardPage'
 import { FirstAccessPage } from '../pages/admin/FirstAccessPage'
 import { LoginPage } from '../pages/admin/LoginPage'
@@ -66,7 +67,7 @@ export default function App() {
       <Route path="clientes" element={<CustomersPage />} />
       <Route path="solicitacoes" element={<RequestsPage />} />
       <Route path="servicos" element={<ServiceTypesPage />} />
-      <Route path="orcamentos" element={<ModulePage eyebrow="Comercial" title="Orçamentos" description="Estruture propostas, itens e status de aprovação sem perder o contexto do pedido original." icon={FileText} actionLabel="Novo orçamento" />} />
+      <Route path="orcamentos" element={<QuotesPage />} />
       <Route path="ordens" element={<ModulePage eyebrow="Operação" title="Ordens de serviço" description="Transforme serviços aprovados em execução organizada, com prioridade e responsável." icon={Wrench} actionLabel="Nova ordem" />} />
       <Route path="agenda" element={<ModulePage eyebrow="Operação" title="Agenda" description="Visualize visitas, instalações e manutenções em um só lugar." icon={CalendarDays} actionLabel="Novo agendamento" />} />
       <Route path="financeiro" element={<ModulePage eyebrow="Gestão" title="Financeiro" description="Acompanhe receitas e despesas vinculadas à operação, com clareza para a gestão." icon={CircleDollarSign} actionLabel="Nova movimentação" />} />
