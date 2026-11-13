@@ -19,3 +19,15 @@ button, input, textarea, select { font: inherit; }
 
 @keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; } }
+
+@media print {
+  .admin-layout aside,
+  .admin-layout header,
+  .admin-layout .no-print { display: none !important; }
+  .admin-content { padding-left: 0 !important; }
+  .admin-content main { padding: 0 !important; }
+  .quote-print-page { max-width: none !important; padding: 0 !important; }
+  .quote-paper { border: 0 !important; border-radius: 0 !important; box-shadow: none !important; }
+  .quote-paper header { display: block !important; }
+  @page { size: A4; margin: 12mm; }
+}

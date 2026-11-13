@@ -12,6 +12,7 @@ import { CustomersPage } from '../pages/admin/CustomersPage'
 import { RequestsPage } from '../pages/admin/RequestsPage'
 import { ServiceTypesPage } from '../pages/admin/ServiceTypesPage'
 import { QuotesPage } from '../pages/admin/QuotesPage'
+import { QuotePrintPage } from '../pages/admin/QuotePrintPage'
 import { ServiceOrdersPage } from '../pages/admin/ServiceOrdersPage'
 import { AppointmentsPage } from '../pages/admin/AppointmentsPage'
 import { FinancePage } from '../pages/admin/FinancePage'
@@ -48,6 +49,7 @@ export default function App() {
       <Route path="solicitacoes" element={<RequestsPage />} />
       <Route path="servicos" element={<ServiceTypesPage />} />
       <Route path="orcamentos" element={<QuotesPage />} />
+      <Route path="orcamentos/:id/imprimir" element={<QuotePrintPage />} />
       <Route path="ordens" element={<ServiceOrdersPage />} />
       <Route path="agenda" element={<AppointmentsPage />} />
       <Route path="financeiro" element={<FinancePage />} />

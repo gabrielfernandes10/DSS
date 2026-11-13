@@ -47,8 +47,9 @@
 
 ## Próximas prioridades comerciais
 
-- [ ] Gerar PDF estilizado de orçamento com padrão visual DSS, incluindo cliente, validade, itens, quantidades, valores, desconto, total e observações.
-- [ ] Disponibilizar o PDF do orçamento para download e envio por e-mail ou WhatsApp, com registro do envio e sem expor credenciais no frontend.
+- [x] Disponibilizar uma página de orçamento pronta para impressão/“Salvar como PDF”, com padrão visual DSS, cliente, validade, itens, quantidades, valores, desconto, total e observações.
+- [x] A página imprimível oferece envio por e-mail via Edge Function existente e compartilhamento por WhatsApp com mensagem preenchida, sem expor credenciais no frontend.
+- [ ] Gerar e anexar automaticamente o arquivo PDF no e-mail e no compartilhamento do WhatsApp, em vez de depender da opção “Salvar como PDF” do navegador.
 
 ## Integração Supabase preparada
 
