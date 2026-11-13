@@ -45,7 +45,9 @@
 - [x] O módulo Financeiro possui receitas e despesas, categorias, valores, datas, pagamento/pendência, vínculo opcional com ordem de serviço, busca, totais de receitas/despesas/saldo, edição e exclusão com confirmação na tabela `financial_transactions`.
 - [x] O módulo Financeiro permite registrar receita e despesa no mesmo lançamento, vinculando os movimentos por `operation_id` e calculando o lucro da operação automaticamente.
 - [ ] Aplicar `supabase/migrations/0002_financial_operation_id.sql` no SQL Editor do projeto Supabase antes de usar lançamentos compostos.
-- [ ] Financeiro possui conciliação bancária, anexos de comprovantes, filtros por período/categoria e relatórios exportáveis.
+- [x] Financeiro possui filtros por busca, período, tipo, categoria e status de pagamento, com totais recalculados para o recorte selecionado.
+- [x] Financeiro possui relatório exportável em CSV com data, tipo, categoria, descrição, ordem vinculada, valor e status.
+- [ ] Financeiro possui conciliação bancária e anexos de comprovantes.
 
 ## Próximas prioridades comerciais
 

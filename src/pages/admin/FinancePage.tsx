@@ -3,9 +3,11 @@ import {
   ArrowDownLeft,
   ArrowUpRight,
   CircleDollarSign,
+  Download,
   LoaderCircle,
   Pencil,
   Plus,
+  RotateCcw,
   RefreshCw,
   Search,
   Trash2,
@@ -58,6 +60,14 @@ interface FinancialOperation {
   expense?: Transaction
 }
 
+interface FinanceFilters {
+  startDate: string
+  endDate: string
+  type: 'all' | TransactionType
+  category: string
+  paid: 'all' | 'paid' | 'pending'
+}
+
 const emptyForm: TransactionForm = {
   mode: 'combined',
   service_order_id: '',
@@ -86,6 +96,8 @@ const categories = [
   'Outros',
 ]
 
+const emptyFilters: FinanceFilters = { startDate: '', endDate: '', type: 'all', category: 'all', paid: 'all' }
+
 function currency(value: number) {
   return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value)
 }
@@ -104,6 +116,7 @@ export function FinancePage() {
   const [form, setForm] = useState<TransactionForm>(emptyForm)
   const [editingOperationId, setEditingOperationId] = useState<string | null>(null)
   const [search, setSearch] = useState('')
+  const [filters, setFilters] = useState<FinanceFilters>(emptyFilters)
   const [showForm, setShowForm] = useState(false)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -338,13 +351,34 @@ export function FinancePage() {
     return [...grouped.values()]
   }, [transactions])
 
-  const filtered = operations.filter((operation) => {
-    const items = [operation.income, operation.expense].filter(Boolean) as Transaction[]
-    const text = items.flatMap((item) => [item.category, item.description ?? '', orderNames.get(item.service_order_id ?? '') ?? '']).join(' ')
-    return text.toLowerCase().includes(search.toLowerCase())
-  })
-  const income = useMemo(() => transactions.filter((item) => item.type === 'income').reduce((sum, item) => sum + Number(item.amount), 0), [transactions])
-  const expense = useMemo(() => transactions.filter((item) => item.type === 'expense').reduce((sum, item) => sum + Number(item.amount), 0), [transactions])
+  const filterCategories = useMemo(() => [...new Set([...categories, ...transactions.map((item) => item.category).filter(Boolean)])].sort((a, b) => a.localeCompare(b, 'pt-BR')), [transactions])
+  const matchesFilters = (item: Transaction) => {
+    const text = [item.category, item.description ?? '', orderNames.get(item.service_order_id ?? '') ?? ''].join(' ').toLowerCase()
+    const matchesSearch = text.includes(search.toLowerCase())
+    const matchesDate = (!filters.startDate || item.occurred_on >= filters.startDate) && (!filters.endDate || item.occurred_on <= filters.endDate)
+    const matchesType = filters.type === 'all' || item.type === filters.type
+    const matchesCategory = filters.category === 'all' || item.category === filters.category
+    const matchesPaid = filters.paid === 'all' || (filters.paid === 'paid' ? item.paid : !item.paid)
+    return matchesSearch && matchesDate && matchesType && matchesCategory && matchesPaid
+  }
+  const filteredTransactions = useMemo(() => transactions.filter(matchesFilters), [transactions, search, filters, orderNames])
+  const filtered = operations.filter((operation) => [operation.income, operation.expense].some((item) => item ? matchesFilters(item) : false))
+  const income = useMemo(() => filteredTransactions.filter((item) => item.type === 'income').reduce((sum, item) => sum + Number(item.amount), 0), [filteredTransactions])
+  const expense = useMemo(() => filteredTransactions.filter((item) => item.type === 'expense').reduce((sum, item) => sum + Number(item.amount), 0), [filteredTransactions])
+
+  function exportCsv() {
+    const header = ['Data', 'Tipo', 'Categoria', 'Descrição', 'Ordem de serviço', 'Valor', 'Status']
+    const rows = filteredTransactions.map((item) => [item.occurred_on, item.type === 'income' ? 'Receita' : 'Despesa', item.category, item.description || '', orderNames.get(item.service_order_id ?? '') || '', Number(item.amount).toFixed(2).replace('.', ','), item.paid ? 'Pago/recebido' : 'Pendente'])
+    const csv = [header, ...rows].map((row) => row.map((value) => `"${String(value).replace(/"/g, '""')}"`).join(';')).join('\n')
+    const blob = new Blob([`\uFEFF${csv}`], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const anchor = document.createElement('a')
+    anchor.href = url
+    anchor.download = `relatorio-financeiro-${new Date().toISOString().slice(0, 10)}.csv`
+    anchor.click()
+    URL.revokeObjectURL(url)
+    setNotice(`${filteredTransactions.length} movimentações exportadas em CSV.`)
+  }
 
   return <div className="mx-auto max-w-7xl">
     <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
@@ -358,6 +392,7 @@ export function FinancePage() {
       <div className="rounded-3xl border border-line bg-white p-5"><div className="flex items-center gap-2 text-red-600"><ArrowDownLeft className="h-4 w-4" /><span className="text-xs font-bold uppercase tracking-[0.14em]">Despesas</span></div><p className="mt-3 font-display text-2xl font-extrabold text-navy">{currency(expense)}</p></div>
       <div className="rounded-3xl border border-line bg-navy p-5 text-white"><div className="flex items-center gap-2 text-cyan"><CircleDollarSign className="h-4 w-4" /><span className="text-xs font-bold uppercase tracking-[0.14em]">Lucro / saldo</span></div><p className="mt-3 font-display text-2xl font-extrabold">{currency(income - expense)}</p></div>
     </div>
+    <section className="mt-6 rounded-3xl border border-line bg-white p-5 shadow-soft sm:p-6"><div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between"><div><p className="text-xs font-extrabold uppercase tracking-[0.16em] text-brand">Relatório financeiro</p><h3 className="mt-2 font-display text-xl font-extrabold text-navy">Filtros e exportação</h3></div><div className="flex flex-wrap gap-2"><Button variant="ghost" onClick={() => { setFilters(emptyFilters); setSearch('') }}><RotateCcw className="h-4 w-4" /> Limpar filtros</Button><Button variant="secondary" onClick={exportCsv} disabled={!filteredTransactions.length}><Download className="h-4 w-4" /> Exportar CSV</Button></div></div><div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-5"><Field label="Buscar" placeholder="Descrição, categoria ou ordem" value={search} onChange={(event) => setSearch(event.target.value)} /><Field label="De" type="date" value={filters.startDate} onChange={(event) => setFilters({ ...filters, startDate: event.target.value })} /><Field label="Até" type="date" value={filters.endDate} onChange={(event) => setFilters({ ...filters, endDate: event.target.value })} /><SelectField label="Tipo" value={filters.type} onChange={(event) => setFilters({ ...filters, type: event.target.value as FinanceFilters['type'] })}><option value="all">Receitas e despesas</option><option value="income">Somente receitas</option><option value="expense">Somente despesas</option></SelectField><SelectField label="Pagamento" value={filters.paid} onChange={(event) => setFilters({ ...filters, paid: event.target.value as FinanceFilters['paid'] })}><option value="all">Todos os status</option><option value="paid">Pagos/recebidos</option><option value="pending">Pendentes</option></SelectField></div><div className="mt-4 max-w-xs"><SelectField label="Categoria" value={filters.category} onChange={(event) => setFilters({ ...filters, category: event.target.value })}><option value="all">Todas as categorias</option>{filterCategories.map((category) => <option value={category} key={category}>{category}</option>)}</SelectField></div><p className="mt-4 text-xs text-slate-500">Exibindo {filteredTransactions.length} movimentações em {filtered.length} operações. Os totais acima respeitam os filtros.</p></section>
     {showForm && <section className="mt-8 rounded-3xl border border-line bg-white p-6 shadow-soft sm:p-8">
       <div className="flex items-start justify-between gap-4"><div><p className="text-xs font-extrabold uppercase tracking-[0.16em] text-brand">{editingOperationId ? 'Editar lançamento' : 'Novo lançamento'}</p><h3 className="mt-2 font-display text-2xl font-extrabold text-navy">{editingOperationId ? 'Editar operação financeira' : 'Registrar receita e despesa'}</h3><p className="mt-2 text-sm leading-6 text-slate-500">Informe os dois valores quando quiser calcular o lucro de um serviço. Se deixar um deles em branco, será criado somente o outro movimento.</p></div><button type="button" onClick={() => setShowForm(false)} className="rounded-xl p-2 text-slate-400 hover:bg-mist hover:text-navy" aria-label="Fechar formulário"><X className="h-5 w-5" /></button></div>
       <form onSubmit={handleSubmit} className="mt-7 grid gap-5 md:grid-cols-2">
