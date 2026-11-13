@@ -28,6 +28,8 @@
 - [x] O módulo Orçamentos possui vínculo com cliente e solicitação, itens, quantidade, valor unitário, subtotal, desconto, total, validade, status e persistência em `quotes`/`quote_items`.
 - [x] Orçamentos possuem link público seguro com token hash, validade, visualização sem login e aprovação ou recusa pelo cliente.
 - [ ] Aplicar `supabase/migrations/0005_public_quote_approval.sql` e publicar `public-quote` no Supabase para ativar a aprovação pública.
+- [x] As Edge Functions registram notificações por e-mail ao proprietário para novas solicitações públicas e aprovações/recusas de orçamento, sem bloquear o registro principal quando o Resend não estiver configurado.
+- [ ] Publicar as versões atualizadas de `create-public-request` e `public-quote` e confirmar `companies.email`, `RESEND_API_KEY` e `RESEND_FROM_EMAIL`.
 - [x] Orçamentos possuem exclusão com confirmação e remoção dos itens vinculados por cascata.
 - [x] Orçamentos possuem edição detalhada de cliente, solicitação, validade, desconto, observações, itens, quantidades, valores unitários e recálculo automático de subtotal/total.
 - [x] O botão de envio de orçamento, a Edge Function `send-quote-email` e o registro de status/atividade foram implementados com Resend sem expor segredo no frontend.

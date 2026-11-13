@@ -6,6 +6,22 @@ function json(body: unknown, status = 200) { return new Response(JSON.stringify(
 function text(value: unknown, max = 200) { return typeof value === 'string' ? value.trim().slice(0, max) : '' }
 async function hashToken(token: string) { const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(token)); return [...new Uint8Array(digest)].map((byte) => byte.toString(16).padStart(2, '0')).join('') }
 function adminClient() { return createClient(Deno.env.get('SUPABASE_URL') ?? '', Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '') }
+function escapeHtml(value: string) { return value.replace(/[&<>'"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[character] ?? character)) }
+
+async function notifyOwner(admin: ReturnType<typeof adminClient>, companyId: string, quoteId: string, decision: string) {
+  const resendKey = Deno.env.get('RESEND_API_KEY')
+  if (!resendKey) return false
+  const [{ data: company }, { data: quote }] = await Promise.all([
+    admin.from('companies').select('name, email').eq('id', companyId).single(),
+    admin.from('quotes').select('total, customer:customers(full_name)').eq('id', quoteId).single(),
+  ])
+  if (!company?.email || !quote) return false
+  const approved = decision === 'approved'
+  const subject = `Orçamento ${approved ? 'aprovado' : 'recusado'} — ${company.name || 'DSS'}`
+  const html = `<div style="font-family:Arial,sans-serif;color:#101d32"><h2 style="color:${approved ? '#16805b' : '#c0392b'}">${subject}</h2><p style="line-height:1.6">O cliente <strong>${escapeHtml(quote.customer?.full_name || 'não identificado')}</strong> ${approved ? 'aprovou' : 'recusou'} um orçamento no valor de <strong>R$ ${Number(quote.total).toFixed(2).replace('.', ',')}</strong>.</p><p style="color:#5d6b7d">Acesse o painel DSS para consultar os detalhes.</p></div>`
+  const response = await fetch('https://api.resend.com/emails', { method: 'POST', headers: { Authorization: `Bearer ${resendKey}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ from: Deno.env.get('RESEND_FROM_EMAIL') ?? 'DSS <onboarding@resend.dev>', to: [company.email], subject, html }) })
+  return response.ok
+}
 
 async function requireAdmin(request: Request, admin: ReturnType<typeof adminClient>) {
   const authorization = request.headers.get('Authorization')
@@ -65,7 +81,8 @@ Deno.serve(async (request) => {
     if (quoteError) return json({ error: 'quote_update_failed' }, 500)
     await admin.from('quote_public_links').update({ decision, decided_at: new Date().toISOString() }).eq('id', link.id)
     await admin.from('activity_logs').insert({ company_id: link.company_id, action: `quote_${decision}`, entity_name: 'quotes', entity_id: link.quote_id, metadata: { source: 'public_link', decided_at: new Date().toISOString() } })
-    return json({ ok: true, decision })
+    const notificationSent = await notifyOwner(admin, link.company_id, link.quote_id, decision)
+    return json({ ok: true, decision, notification_sent: notificationSent })
   }
   return json({ error: 'invalid_action' }, 400)
 })

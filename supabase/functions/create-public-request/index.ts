@@ -15,6 +15,17 @@ function text(value: unknown, max = 500) {
   return typeof value === 'string' ? value.trim().slice(0, max) : ''
 }
 
+function escapeHtml(value: string) {
+  return value.replace(/[&<>'"]/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[character] ?? character))
+}
+
+async function notifyOwner(admin: ReturnType<typeof createClient>, company: { name?: string; email?: string | null }, subject: string, content: string) {
+  const resendKey = Deno.env.get('RESEND_API_KEY')
+  if (!resendKey || !company.email) return false
+  const response = await fetch('https://api.resend.com/emails', { method: 'POST', headers: { Authorization: `Bearer ${resendKey}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ from: Deno.env.get('RESEND_FROM_EMAIL') ?? 'DSS <onboarding@resend.dev>', to: [company.email], subject, html: `<div style="font-family:Arial,sans-serif;color:#101d32"><h2 style="color:#1769aa">${escapeHtml(subject)}</h2><p style="line-height:1.6">${content}</p><p style="color:#5d6b7d">Acesse o painel DSS para acompanhar esta solicitação.</p></div>` }) })
+  return response.ok
+}
+
 async function sha256(value: string) {
   const bytes = new TextEncoder().encode(value)
   const digest = await crypto.subtle.digest('SHA-256', bytes)
@@ -57,7 +68,7 @@ Deno.serve(async (request) => {
   await admin.from('public_submission_guards').insert({ guard_key_hash: guardKey, kind })
   await admin.from('public_submission_guards').delete().lt('created_at', new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString())
 
-  const { data: company, error: companyError } = await admin.from('companies').select('id').eq('slug', companySlug).single()
+  const { data: company, error: companyError } = await admin.from('companies').select('id, name, email').eq('slug', companySlug).single()
   if (companyError || !company) return json({ error: 'company_not_found' }, 404)
 
   let customer = null
@@ -86,5 +97,7 @@ Deno.serve(async (request) => {
   const { error: requestError } = await admin.from('service_requests').insert({ company_id: company.id, customer_id: customer.id, service_type_id: serviceType?.id || null, status: 'new', source: 'public_form', subject, description, priority })
   if (requestError) return json({ error: 'request_create_failed' }, 500)
 
-  return json({ ok: true })
+  const notificationSent = await notifyOwner(admin, company, `Nova solicitação pelo site — ${subject}`, `<p><strong>Cliente:</strong> ${escapeHtml(fullName)}</p><p><strong>Tipo:</strong> ${escapeHtml(kind)}</p><p><strong>Mensagem:</strong><br>${escapeHtml(message).replace(/\n/g, '<br>')}</p>`)
+
+  return json({ ok: true, notification_sent: notificationSent })
 })

@@ -79,4 +79,6 @@ Para habilitar o envio:
 4. Publique a função `send-quote-email` pelo Supabase CLI ou pelo fluxo de Edge Functions do Dashboard.
 5. No painel DSS, abra **Orçamentos** e use **Enviar e-mail** em um orçamento cujo cliente tenha e-mail cadastrado.
 
+As funções `create-public-request` e `public-quote` também usam os mesmos secrets para notificar o e-mail cadastrado em `companies.email` quando chega uma nova solicitação pública ou quando o cliente aprova/recusa um orçamento. Se o Resend estiver indisponível, a solicitação ou decisão continua sendo registrada normalmente e apenas o aviso é ignorado.
+
 Se a função ainda não estiver publicada ou os segredos não existirem, o botão não altera o orçamento e o painel informa que o Resend precisa ser configurado. O envio atual é HTML responsivo; a página imprimível permite salvar o orçamento como PDF pelo navegador.
